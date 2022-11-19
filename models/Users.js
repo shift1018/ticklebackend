@@ -55,3 +55,6 @@ const UsersSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("Users", UsersSchema);
+
+// const UsersModel = mongoose.model("Users", UsersSchema);
+// module.exports = UsersModel;
