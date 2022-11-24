@@ -18,6 +18,27 @@ const UsersSchema = new mongoose.Schema(
     avatarURL: {
       type: String,
     },
+    profileURL: {
+      type: String,
+    },
+    city: {
+      type:String,
+      max:25,
+
+    },
+    from: {
+      type: String,
+      max:25,
+    },
+    birtday: {
+      type: Date,
+
+    },
+    desc: {
+      type: String,
+      max:100,
+    },
+
     role: [
       {
         type: String,
@@ -48,6 +69,12 @@ const UsersSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Friendships",
+      },
+    ],
+    albums: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Albums",
       },
     ],
   },

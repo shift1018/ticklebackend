@@ -39,6 +39,12 @@ const PostsSchema = new mongoose.Schema(
         ref: "Comments",
       },
     ],
+    photos: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Photos",
+      },
+    ],
   },
   { timestamps: true }
 );

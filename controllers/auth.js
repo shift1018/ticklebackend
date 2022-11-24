@@ -59,17 +59,23 @@ export const login = async (req, res) => {
             }) 
         }
 
-        // Authorization
-        const token = jwt.sign(
+        // Authorization (create accessToken to check if user is logged in based on jasonwebtoken package)
+        const accessToken = jwt.sign(
             {
                 id: user._id,
+                username: user.username, 
+                role: user.role,
+                email: user.email
             }, 
+            // get a secret phrase from .env file (can be any manually created there) which is needed to read the token after crypting
             process.env.JWT_SECRET,
             { expiresIn: "30d" },
         )
 
         res.json({
-            token, user, message: "You're logged in"
+            token: accessToken, 
+            user, 
+            message: "You're logged in"
         })
 
 
@@ -90,18 +96,21 @@ export const getUser = async (req, res) => {
                 message: "User does not exist"
             })
         }
-
-        const token = jwt.sign(
+        // create a token again, always based on id, that's why it'll be the same
+        const accessToken = jwt.sign(
             {
                 id: user._id,
+                username: user.username, 
+                role: user.role,
+                email: user.email
             }, 
             process.env.JWT_SECRET,
             { expiresIn: "30d" },
         )
 
         res.json({
-            user, 
-            token,
+            token: accessToken,
+            user  
         })
 
     }
