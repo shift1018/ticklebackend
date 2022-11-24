@@ -49,4 +49,4 @@ const PostsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Posts", PostsSchema);
+export default mongoose.model("Posts", PostsSchema)
