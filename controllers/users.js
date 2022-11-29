@@ -5,9 +5,12 @@ import jwt from "jsonwebtoken";
 
 // Find user by ID
 export const byId = async (req, res) => {
+  const userId = req.query.userId;
+  const username = req.query.username;
   try {
-    const id = req.params.id;
-    const user = await Users.findById(id);
+    const user = userId
+      ? await Users.findById(userId)
+      : await Users.findOne({ username: username });
     // NOT sending password or role
     const { password, role, ...other } = user._doc;
     res.status(200).json(other);

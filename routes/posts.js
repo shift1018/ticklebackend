@@ -4,6 +4,8 @@ import {
   getAll,
   getById,
   getMyPosts,
+  getTimelinePosts,
+  getProfilePosts,
   removePost,
   updatePost,
 } from "../controllers/posts.js";
@@ -29,7 +31,15 @@ router.patch("/:id", checkAuth, updatePost);
 
 // Get all user's Posts
 // http://localhost:8800/api/posts/myPosts/
-router.get("/user/my/", checkAuth, getMyPosts);
+router.get("/user/:userId", checkAuth, getMyPosts);
+
+// Get User's Timeline Posts
+//localhost:8800/api/posts/timeline/:userId
+router.get("/timeline/:userId", getTimelinePosts);
+
+// Get User's Profile Posts
+//localhost:8800/api/posts/myPosts/
+router.get("/profile/:username", getProfilePosts);
 
 // Remove Post
 // http://localhost:8800/api/posts/:id

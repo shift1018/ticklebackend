@@ -7,7 +7,7 @@ import { byId, updateUser, deleteUser } from "../controllers/users.js";
 const router = new Router();
 
 // http://localhost:8800/users/byId/123
-router.get("/byId/:id", byId);
+router.get("/", byId);
 
 // http://localhost:8800/users/update/123
 router.put("/update/:id", updateUser);

@@ -6,10 +6,10 @@ const CommentsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    createDate: {
-      type: Date,
-      default: Date.now,
-    },
+    // createDate: {
+    //   type: Date,
+    //   default: Date.now,
+    // },
     user: {
       type: Schema.Types.ObjectId,
       ref: "Users",
@@ -18,7 +18,11 @@ const CommentsSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Posts",
     },
-    //???  replies: [{}],
+    responseTo: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+    },
+    
   },
   { timestamps: true }
 );

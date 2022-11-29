@@ -14,9 +14,11 @@ const PostsSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    imageURL: {
-      type: String,
-    },
+    imageURL: [
+      {
+        type: String,
+      },
+    ],
     tags: [
       {
         type: String,

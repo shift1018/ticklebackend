@@ -9,7 +9,7 @@ import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/users.js";
 import postRoute from "./routes/posts.js";
 import friendsRoute from "./routes/friend.js";
-
+import commentsRoute from "./routes/comments.js";
 
 dotenv.config();
 
@@ -39,6 +39,7 @@ app.use("/users", usersRoute);
 app.use("/api/friends", friendsRoute);
 
 app.use("/api/posts", postRoute);
+app.use("/api/comments", commentsRoute);
 
 async function start() {
   try {

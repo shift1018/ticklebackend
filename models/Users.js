@@ -71,10 +71,10 @@ const UsersSchema = new mongoose.Schema(
         ref: "Friendships",
       },
     ],
-    albums: [
+    photos: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Albums",
+        ref: "Photos",
       },
     ],
   },

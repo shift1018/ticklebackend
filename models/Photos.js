@@ -7,12 +7,16 @@ const PhotosSchema = new mongoose.Schema(
       required: true,
     },
     album: {
-      type: Schema.Types.ObjectId,
-      ref: "Albums",
+      type: String,
+      required: true,
     },
     post: {
       type: Schema.Types.ObjectId,
       ref: "Posts",
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
     },
   },
   { timestamps: true }
