@@ -49,6 +49,7 @@ export const updateUser = async (req, res) => {
   // console.log(desc);
   // console.log(req.body);
   let avatarURL= req.body.avatarURL;
+  let profileURL= req.body.profileURL;
 
       
   //set azure environment : ConnectionString and ContainerName
@@ -58,17 +59,65 @@ export const updateUser = async (req, res) => {
   const containerClient = blobServiceClient.getContainerClient("post");
 
   // put all the images into urlList
-  if (req.files!==null) {
-    const fileName = req.files.fileName.name;
-    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+  //..............................................................................
+
+  if (req.files!== null){
+if (req.files!== null && Array.isArray(req.files)  ) {
+  req.files.forEach(element => {
+    const imageName = element.name;
+    const blockBlobClient = containerClient.getBlockBlobClient(imageName);
+    const options = { blobHTTPHeaders: { blobContentType: element.type } };
+    blockBlobClient.uploadData(element.data, options);
+  if (element== "fileName") {
+    avatarURL = containerClient.getBlockBlobClient(imageName).url;
+
+  } else {
+    profileURL = containerClient.getBlockBlobClient(imageName).url;
+  }
+  });
+}else if(req.files.fileName){
+  const imageName = req.files.fileName.name;
+    const blockBlobClient = containerClient.getBlockBlobClient(imageName);
     const options = { blobHTTPHeaders: { blobContentType: req.files.fileName.type } };
     blockBlobClient.uploadData(req.files.fileName.data, options);
-    // const response = await blockBlobClient.uploadFile(filePath);
-    // https://tickle.blob.core.windows.net/post/download.jpg
-    // https://tickle.blob.core.windows.net/post/az1.jpg
+    avatarURL = containerClient.getBlockBlobClient(imageName).url;
+}else{
+  const imageName = req.files.fileNameb.name;
+  const blockBlobClient = containerClient.getBlockBlobClient(imageName);
+  const options = { blobHTTPHeaders: { blobContentType: req.files.fileNameb.type} };
+  blockBlobClient.uploadData(req.files.fileNameb.data, options);
+
+  profileURL = containerClient.getBlockBlobClient(imageName).url;
+}
+}
+//..............................................................................
+  // if (req.files.fileName) {
+  //   const fileName = req.files.fileName.name;
+  //   const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+  //   const options = { blobHTTPHeaders: { blobContentType: req.files.fileName.type } };
+  //   blockBlobClient.uploadData(req.files.fileName.data, options);
+  //   // const response = await blockBlobClient.uploadFile(filePath);
+  //   // https://tickle.blob.core.windows.net/post/download.jpg
+  //   // https://tickle.blob.core.windows.net/post/az1.jpg
   
-    avatarURL = containerClient.getBlockBlobClient(fileName).url;
-  }
+  //   avatarURL = containerClient.getBlockBlobClient(fileName).url;
+  // }
+  // if (req.files.fileNameb) {
+  //   const fileNameb = req.files.fileNameb.name;
+  //   const blockBlobClientb = containerClient.getBlockBlobClient(fileNameb);
+  //   const optionsb = { blobHTTPHeaders: { blobContentType: req.files.fileNameb.type } };
+  //   blockBlobClientb.uploadData(req.files.fileNameb.data, optionsb);
+  //   // const response = await blockBlobClient.uploadFile(filePath);
+  //   // https://tickle.blob.core.windows.net/post/download.jpg
+  //   // https://tickle.blob.core.windows.net/post/az1.jpg
+  
+  //   profileURL = containerClient.getBlockBlobClient(fileNameb).url;
+
+
+
+  // }
+
+  
   
 
 
@@ -86,6 +135,7 @@ export const updateUser = async (req, res) => {
       const user = await Users.findByIdAndUpdate(id, 
         // { $set:req.body,avatarURL: avatarURL},
         { avatarURL: avatarURL,
+          profileURL: profileURL,
           username: username,
           city: city,
           from: from,
@@ -106,6 +156,8 @@ export const updateUser = async (req, res) => {
       .json({ message: "you can only update your own account!" });
   }
 };
+
+
 
 // Delete User
 export const deleteUser = async (req, res) => {
@@ -184,56 +236,10 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// Follow a User
-/*
-export const followUser = async (req, res) => {
-    // first check if the users are the same
-  if (req.body.userId !== req.params.id) {
-    try{
-        // user is the person you are looking up ---> current user is YOU (person trying to make the request)
-        const user = await Users.findById(req.params.id);
-        const currentUser = await Users.findById(req.body.userId);
-         // if the user does not already follow the user, we will update them here
-        if(!user.followers.includes(req.body.userId)){
-            // OUR user only has friendships ---> so replace followers but no followings
-            await user.updateOne({ $push: {followers: req.body.userId}});
-            await currentUser.updateOne({ $push: {followings: req.params.id}});
-            res.status(200).json({ message: "you are now following this user!" });
-        } else{
-            res.status(403).json("you already follow this user")
-        }
-    }catch(err){
-        res.status(500).json(err)
-    }
-  } else {
-    res.status(403).json({ message: "you cannot follow yourself!" });
-  }
-};
-*/
 
-// unFollow a User
-/*
-export const unfollowUser = async (req, res) => {
-    // first check if the users are the same
-  if (req.body.userId !== req.params.id) {
-    try{
-        // user is the person you are looking up ---> current user is YOU (person trying to make the request)
-        const user = await Users.findById(req.params.id);
-        const currentUser = await Users.findById(req.body.userId);
-         // if the user does follow the user, we will update their freidnship here
-        if(user.followers.includes(req.body.userId)){
-            // OUR user only has friendships ---> so replace followers but no followings
-            await user.updateOne({ $pull: {followers: req.body.userId}});
-            await currentUser.updateOne({ $pull: {followings: req.params.id}});
-            res.status(200).json({ message: "you have successfully unfollowed the user" });
-        } else{
-            res.status(403).json("you don't follow this user")
-        }
-    }catch(err){
-        res.status(500).json(err)
-    }
-  } else {
-    res.status(403).json({ message: "you cannot unfollow yourself!" });
-  }
-};
-*/
+
+export const updateBackground = async (req, res) => {
+
+
+
+}
