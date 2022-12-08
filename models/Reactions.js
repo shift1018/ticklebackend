@@ -2,20 +2,20 @@ import mongoose, { Schema } from "mongoose";
 
 const ReactionsSchema = new mongoose.Schema(
   {
-    type: {
+    reaction: {
       type: String,
+      enum: ["like", "love", "haha", "sad", "angry", "wow"],
       required: true,
-    },
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "Users",
     },
     post: {
       type: Schema.Types.ObjectId,
       ref: "Posts",
     },
+    reactionBy: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+    },
   },
-  { timestamps: true }
 );
 
 export default mongoose.model("Reactions", ReactionsSchema);

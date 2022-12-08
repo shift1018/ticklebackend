@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { addFriend, addApproveDate, getApprovedFriends, getNotApprovedFriends, deleteMyFriend } from "../controllers/friends.js";
+import { addFriend, addApproveDate, getApprovedFriends, getNotApprovedFriends, deleteMyFriend, getFriendsFriend } from "../controllers/friends.js";
 import { checkAuth } from '../utils/checkAuth.js';
 
 const router = new Router();
@@ -25,6 +25,9 @@ router.patch("/user/approveDate", checkAuth, addApproveDate);
 //http://localhost:8800/api/friends/user/deleteFriend
 router.delete("/user/deleteFriend/:id", checkAuth, deleteMyFriend);
 
-
+// Get Friends of my friend
+//http://localhost:8800/api/friends/hisFriends/:id
+router.get('/hisFriends/:username', getFriendsFriend);
+//router.get('/myFriends/:id', checkAuth, getMyFriends);
 
 export default router;

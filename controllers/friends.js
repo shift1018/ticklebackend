@@ -253,3 +253,48 @@ export const deleteMyFriend = async (req, res) => {
 };
 
 
+//Get Friends of a friend
+
+export const getFriendsFriend = async (req, res) => {
+  try {
+   // console.log("username from profile", req.params.username)
+     const username = req.params.username;
+
+    if(username !== "undefined"){
+     
+     const friend = await User.findOne({ username: username });
+     
+    const list = await Promise.all(
+      friend.friendships.map((friendships) => {
+        return Friendships.findById(friendships._id);
+      })
+    );
+
+    const friends = [];
+ 
+    for( let i = 0; i<list.length; i++){
+      if(list[i].approvedDate!==null){
+      if(list[i].user != friend.id){
+    friends[i]=await User.findById(list[i].user);}
+   else {
+    friends[i]=await User.findById(list[i].friend);
+    }
+  }
+    }
+    
+    var friendsFinal = friends.filter(function (el) {
+      return el != null;
+    });
+
+    res.json(friendsFinal);
+   }
+   //res.json(list);
+  } catch (error) {
+    res.json({ message: "Something going wrong" });
+  }
+};
+
+
+
+
+

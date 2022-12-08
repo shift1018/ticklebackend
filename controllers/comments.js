@@ -28,18 +28,6 @@ export const saveComment = async (req, res) => {
   });
 };
 
-// export const getComments = async (req, res) => {
-//     // postId comes from the frontend in the request
-//     console.log(req.body.postId);
-//     Comments.find({"post": req.body.postId})
-//     .populate("user")
-//     // call it as comments in the parameters of .exec to send it to frontend as the response
-//     .exec((err, comments) => {
-//         if(err) return res.status(400).send(err)
-//         res.status(200).json({ success:true, comments })
-//     })
-// }
-
 export const getComments = async (req, res) => {
     
   try {
@@ -60,3 +48,15 @@ export const getComments = async (req, res) => {
     res.json({ message: "Something went wrong" });
   }
 };
+
+// export const getComments = async (req, res) => {
+//     // postId comes from the frontend in the request
+//     console.log(req.body.postId);
+//     Comments.find({"post": req.body.postId})
+//     .populate("user")
+//     // call it as comments in the parameters of .exec to send it to frontend as the response
+//     .exec((err, comments) => {
+//         if(err) return res.status(400).send(err)
+//         res.status(200).json({ success:true, comments })
+//     })
+// }

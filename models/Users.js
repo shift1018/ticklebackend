@@ -23,29 +23,29 @@ const UsersSchema = new mongoose.Schema(
     },
     city: {
       type:String,
-      max:25,
+      max:50,
 
     },
     from: {
       type: String,
-      max:25,
+      max:50,
     },
-    birtday: {
+    birthday: {
       type: Date,
 
     },
     desc: {
       type: String,
-      max:100,
+      max:500,
     },
 
-    role: [
+    role: 
       {
         type: String,
         required: true,
         default: "User",
       },
-    ],
+    
     posts: [
       {
         type: mongoose.Schema.Types.ObjectId,
