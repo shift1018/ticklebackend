@@ -292,6 +292,7 @@ export const updatePost = async (req, res) => {
     const post = await Post.findById(req.params.id);
 
     const urlList= post.imageURL;
+    const num = urlList.length;
 
     //console.log(title);
     if (req.files ) {
@@ -324,11 +325,29 @@ export const updatePost = async (req, res) => {
           const photoUrl = containerClient.getBlockBlobClient(fileName);
           // if (urlList.length<9) {
           urlList.push(photoUrl.url);
-
-          
           // }
         });
       }
+
+      for (let index = num; index < urlList.length; index++) {
+        const element = urlList[index];
+        const newImage = new Photo({
+          photoURL: element,
+          album: "Albums",
+          post: post._id,
+          user: req.userId,
+        });
+        await newImage.save();
+        //push photo into user table
+        await User.findByIdAndUpdate(req.userId, {
+          $push: { photos: newImage },
+        });
+        //push photo into Post table
+        await Post.findByIdAndUpdate(post._id, {
+          $push: { photos: newImage },
+        });
+      }
+
 
 
 
@@ -344,24 +363,24 @@ export const updatePost = async (req, res) => {
 
 
 
-    urlList.forEach(async (element) => {
-      const newImage = new Photo({
-        photoURL: element,
-        album: "Albums",
-        post: newPostWithImage._id,
-        user: req.userId,
-      });
-      await newImage.save();
+    // urlList.forEach(async (element) => {
+    //   const newImage = new Photo({
+    //     photoURL: element,
+    //     album: "Albums",
+    //     post: post._id,
+    //     user: req.userId,
+    //   });
+    //   await newImage.save();
 
-      //push photo into user table
-      await User.findByIdAndUpdate(req.userId, {
-        $push: { photos: newImage },
-      });
-      //push photo into Post table
-      await Post.findByIdAndUpdate(newPostWithImage._id, {
-        $push: { photos: newImage },
-      });
-    });
+    //   //push photo into user table
+    //   await User.findByIdAndUpdate(req.userId, {
+    //     $push: { photos: newImage },
+    //   });
+    //   //push photo into Post table
+    //   await Post.findByIdAndUpdate(post._id, {
+    //     $push: { photos: newImage },
+    //   });
+    // });
 
     res.json(post);
   } catch (error) {
